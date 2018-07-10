@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>🏋️ Kettle Counter</title>
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@xkeshi/vue-countdown@1.0.0/dist/vue-countdown.min.js"></script>
+    <style type="text/css">
+      body {
+        font-family: 'Nunito', sans-serif;
+        background-color: #1d1d1d;
+      }
+      #app { 
+        width: 400px;
+        text-align: center;
+        margin: 0 auto; 
+        margin-top: 3rem;
+      }
+      h1 { color: #fafafa; }
+      .clock {
+        background: #fafafa;
+        border: .3rem solid #fafafa;
+        border-radius: .5rem;
+        display: inline-block;
+        margin-bottom: 1em;
+      }
+      .clock-hours,
+      .clock-minutes,
+      .clock-seconds {
+        background: linear-gradient(to bottom, #26303b 50%, #2c3540 50%);
+        display: inline-block;
+        color: #fafafa;
+        font-size: 3rem;
+        font-weight: 300;
+        padding: .5rem 1rem;
+        text-align: center;
+        position: relative;
+      }
+      .clock-hours {
+        border-right: .15rem solid #fafafa;
+        border-radius: .5rem 0 0 .5rem;
+      }
+      .clock-minutes {
+        border-right: .15rem solid #fafafa;
+      }
+      .clock-seconds {
+        border-radius: 0 .5rem .5rem 0;
+      }
+      .clock-hourtime {
+        font-size: 1rem;
+        position: absolute;
+        top: 2px;
+        left: 8px;
+      }
+      /* start da css for da buttons */
+      button:focus {outline:0;}
+
+      .btn {
+        border-radius: 5px;
+        padding: 15px 25px;
+        font-size: 22px;
+        text-decoration: none;
+        margin: 20px;
+        color: #fafafa;
+        position: relative;
+        display: inline-block;
+      }
+
+      .btn:active {
+        transform: translate(0px, 5px);
+        -webkit-transform: translate(0px, 5px);
+        box-shadow: 0px 1px 0px 0px;
+        outline: none;
+      }
+
+      .btn:disabled {
+        opacity: 0.5;
+      }
+
+      .blue {
+        background-color: #55acee;
+        box-shadow: 0px 5px 0px 0px #3C93D5;
+      }
+
+      .blue:hover:not(:disabled) {
+        background-color: #6FC6FF;
+      }
+
+      .green {
+        background-color: #2ecc71;
+        box-shadow: 0px 5px 0px 0px #15B358;
+      }
+
+      .green:hover:not(:disabled) {
+        background-color: #48E68B;
+      }
+      .purple {
+        background-color: #9b59b6;
+        box-shadow: 0px 5px 0px 0px #82409D;
+      }
+
+      .purple:hover:not(:disabled) {
+        background-color: #B573D0;
+      }
+      .red {
+        background-color: #e74c3c;
+        box-shadow: 0px 5px 0px 0px #CE3323;
+      }
+
+      .red:hover:not(:disabled) {
+        background-color: #FF6656;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+
+      <div v-if="!counting" class="clock">
+        <div class="clock-minutes">01</div>
+        <div class="clock-seconds">00</div>
+      </div>
+
+      <countdown v-if="counting" :time="totalTime" :leading-zero="true" @countdownend="countDownEnd" tag="div" class="clock">
+        <template slot-scope="props">
+          <div class="clock-minutes">{{ props.minutes }}</div>
+          <div class="clock-seconds">{{ props.seconds }}</div>
+        </template>
+      </countdown>
+
+      <div>
+        <h1>Lifts: {{ liftCount }}</h1>
+      </div>
+
+      <div>
+        <div>
+          <button type="button" class="btn green" :disabled="counting" @click="countdown">
+            Start
+          </button>
+          <button type="button" class="btn purple" :disabled="!counting" @click="incLiftCount">
+            Lift!
+          </button>
+        </div>
+        <div>
+          <button type="button" class="btn blue" @click="reset">
+            Reset
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script type="text/javascript">
+      Vue.component('countdown', VueCountdown);
+
+      var app = new Vue({
+        el: '#app',
+        data: function () {
+          return {
+            liftCount: 0,
+            counting: false,
+            totalTime: (60*1000) * 1, // 1 min
+          };
+        },
+        methods: {
+          countdown: function () {
+            this.counting = true;
+          },
+          countDownEnd: function () {
+            this.counting = false;
+          },
+          incLiftCount: function () {
+            if(this.counting > 0)  this.liftCount++;
+          },
+          reset: function () {
+            this.counting = false;
+            this.liftCount = 0;
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
