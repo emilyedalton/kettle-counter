@@ -133,8 +133,14 @@
         </div>
       </div>
       
-      <div v-if="counting">
-        <countdown :time="getTotalTime" :leading-zero="true" @countdownend="countDownEnd" tag="div" class="clock">
+      <div v-if="counting" v-on:keyup.space="submit">
+        <countdown 
+          class="clock"
+          tag="div"
+          :time="getTotalTime"
+          :leading-zero="true"
+          @countdownend="countDownEnd" 
+          >
           <template slot-scope="props">
             <div class="clock-minutes">{{ props.minutes }}</div>
             <div class="clock-seconds">{{ props.seconds }}</div>
@@ -171,14 +177,16 @@
           return {
             liftCount: 0,
             counting: false,
-            seconds: 0,
-            minutes: 0
+            seconds: '00',
+            minutes: '01'
           };
         },
         methods: {
           countdown: function () {
-            this.liftCount = 0;
-            this.counting = true;
+            if(!this.counting){
+              this.liftCount = 0;
+              this.counting = true;
+            }
           },
           countDownEnd: function () {
             this.counting = false;
@@ -215,6 +223,12 @@
           minutes: function (val) {
            if (this.minutes > 59) this.minutes = 59;
           }
+        },
+        mounted(){
+          window.addEventListener('keyup', (event) => {
+            if (event.keyCode === 32) this.countdown();
+            if (event.keyCode === 38) this.incLiftCount();
+          });
         }
       });
     </script>
